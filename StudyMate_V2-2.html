@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StudyMate V2</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f6f9;color:#18212b;font-family:Arial,sans-serif}
+.wrap{max-width:920px;margin:auto;padding:22px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.logo{font-size:27px;font-weight:800}.version{background:#e8eefb;padding:8px 12px;border-radius:20px;font-size:12px}
+.hero{background:#18212b;color:#fff;border-radius:22px;padding:25px;margin-bottom:16px}
+.hero small{color:#bfc8d3}.hero h1{font-size:30px;margin:8px 0}.hero p{margin:0;color:#cbd3dc}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.card{background:#fff;border-radius:19px;padding:19px;box-shadow:0 5px 18px #0000000a}
+.label{font-size:12px;color:#718096}.big{font-size:28px;font-weight:800;margin-top:6px}
+.progress{height:9px;background:#e8ecf1;border-radius:20px;margin-top:11px;overflow:hidden}.fill{height:100%;width:0;background:#18212b;transition:.3s}
+.section{margin-top:16px}.section h2{margin:0 0 10px}
+.task{display:flex;align-items:center;gap:11px;padding:12px 0;border-bottom:1px solid #edf0f3}
+.task input{width:18px;height:18px}
+.timer{text-align:center}.time{font-size:48px;font-weight:800;letter-spacing:2px;margin:8px 0}
+button{border:0;border-radius:12px;padding:10px 16px;background:#18212b;color:white;font-weight:700;margin:3px;cursor:pointer}
+button.secondary{background:#e9edf2;color:#18212b}
+.badge{display:inline-block;background:#edf1f6;border-radius:20px;padding:6px 10px;font-size:12px}
+footer{text-align:center;color:#8b95a2;font-size:12px;margin:18px 0}
+@media(max-width:650px){.wrap{padding:15px}.grid{grid-template-columns:1fr}.hero h1{font-size:27px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><div class="logo">StudyMate</div><div class="version">Student Project • V2.0</div></header>
+
+<section class="hero">
+<small>PERSONAL STUDY DASHBOARD</small>
+<h1>Welcome, Sharad 👋</h1>
+<p>Plan less. Focus more. Keep moving.</p>
+</section>
+
+<div class="grid">
+<div class="card"><div class="label">Tasks Completed</div><div class="big" id="done">0 / 4</div></div>
+<div class="card"><div class="label">Focus Sessions</div><div class="big" id="sessions">0</div></div>
+<div class="card"><div class="label">Today's Progress</div><div class="big" id="percent">0%</div><div class="progress"><div class="fill" id="fill"></div></div></div>
+</div>
+
+<section class="card section">
+<h2>Today's Plan</h2>
+<label class="task"><input type="checkbox" class="taskbox"> Biology — revise Chapter 1</label>
+<label class="task"><input type="checkbox" class="taskbox"> Chemistry — practice important questions</label>
+<label class="task"><input type="checkbox" class="taskbox"> Physics — revise formulas</label>
+<label class="task"><input type="checkbox" class="taskbox"> 20 min quick revision</label>
+</section>
+
+<section class="card section timer">
+<span class="badge">Focus Timer</span>
+<div class="time" id="timer">25:00</div>
+<button onclick="start()">Start</button>
+<button class="secondary" onclick="pause()">Pause</button>
+<button class="secondary" onclick="resetTimer()">Reset</button>
+</section>
+
+<footer>Built as a personal student project • StudyMate V2.0</footer>
+</div>
+
+<script>
+let seconds=1500, interval=null, sessions=0;
+const timer=document.getElementById("timer");
+function showTime(){let m=String(Math.floor(seconds/60)).padStart(2,"0"),s=String(seconds%60).padStart(2,"0");timer.textContent=m+":"+s}
+function start(){if(interval)return;interval=setInterval(()=>{if(seconds>0){seconds--;showTime()}else{clearInterval(interval);interval=null;sessions++;document.getElementById("sessions").textContent=sessions}},1000)}
+function pause(){clearInterval(interval);interval=null}
+function resetTimer(){pause();seconds=1500;showTime()}
+const boxes=[...document.querySelectorAll(".taskbox")];
+function update(){let d=boxes.filter(x=>x.checked).length,p=Math.round(d/boxes.length*100);document.getElementById("done").textContent=d+" / "+boxes.length;document.getElementById("percent").textContent=p+"%";document.getElementById("fill").style.width=p+"%"}
+boxes.forEach(x=>x.addEventListener("change",update));showTime();update();
+</script>
+</body>
+</html>
